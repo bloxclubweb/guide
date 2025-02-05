@@ -1,6 +1,6 @@
 Esse é um paço a paço simples para explicar como você deve ficar sua conta Roblox.
 
-1. Entre no nosso grupo. [Cliquei aqui](roblox://www.roblox.com/communities/16607994/BLOXCLUB#!/about) para ir ao grupo.
+1. Entre no nosso grupo. [Cliquei aqui](roblox://www.roblox.com/communities/16607994/BLOXCLUB) para ir ao grupo.
 
 2. Uma vez que você ja está na página do grupo, envie uma solicitação de participação como na imagem abaixo
 
