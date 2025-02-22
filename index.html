@@ -465,114 +465,66 @@ function loadPost() {
         window.location.href = "404.html";
     }
 }
+function markdownToHTML(md) { const rules = [ [/^###### (.$)/gim, '<h6>$1</h6>'], [/^##### (.$)/gim, '<h5>$1</h5>'], [/^#### (.$)/gim, '<h4>$1</h4>'], [/^### (.$)/gim, '<h3>$1</h3>'], [/^## (.$)/gim, '<h2>$1</h2>'], [/^# (.$)/gim, '<h1>$1</h1>'], [/**([^]+)**/gim, '<strong>$1</strong>'], [/*([^]+)*/gim, '<em>$1</em>'], [/!]+)([^)]+)/gim, '<a href="$2">$1</a>'], [/^- (.$)/gim, '<ul><li>$1</li></ul>'], [/ /g, '<br>'], [/^> (.$)/gim, '<div class="quote-card quote-$1.toLowerCase()"><h3>$1</h3><p>$2</p></div>'], [/^> (.*$)/gim, '<div class="quote-card quote-default"><h3>Citação</h3><p>$1</p></div>'], [/([^`]+)/gim, '<div class="code-block"><button class="copy-button">Copiar</button><pre><code>$1</code></pre></div>'] ];
 
-function addCopyButtonEventListeners() {
-    const copyButtons = document.querySelectorAll('.copy-button');
-    copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const code = button.nextElementSibling.innerText;
-            navigator.clipboard.writeText(code)
-                .then(() => {
-                    button.innerText = 'Copied!';
-                    setTimeout(() => {
-                        button.innerText = 'Copiar';
-                    }, 1500);
-                })
-                .catch(() => alert('Erro ao copiar'));
-        });
-    });
+rules.forEach(([regex, replacement]) => md = md.replace(regex, replacement));
+return md;
+
 }
 
-function summarizeText(content) {
-    let sentences = content.split(". ");
-    let summary = sentences.slice(0, 2).join(". ") + (sentences.length > 2 ? "." : "");
-    return summary;
-}
+function loadPost() { const fileName = new URLSearchParams(window.location.search).get('file'); if (!fileName) return window.location.href = "404.html";
 
-document.getElementById("summarizeButton").addEventListener("click", function() {
-    const postContent = document.getElementById("post-content");
-
-    const existingSummaryContainer = postContent.querySelector(".summary-container");
-
-    if (existingSummaryContainer) {
-        existingSummaryContainer.classList.remove('show');
-    } else {
-        const articleContent = postContent.querySelector("article").innerText;
-        const summary = summarizeText(articleContent); 
-
-        const summaryContainer = document.createElement("div");
-        summaryContainer.classList.add("summary-container");
-        summaryContainer.innerHTML = `
-            <h4>
-            <img src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/menu_book_200dp_FFF_FILL0_wght700_GRAD200_opsz48.png" alt="Resumo">
-                 Summer
-            </h4>
-            <h5>
-            Resumo do texto
-            </h5>
-            <p>${summary}</p>
-            <p class="auto-note">*Resumo gerado automaticamente.</p>
+fetch(`./posts/${fileName}.md`)
+    .then(response => response.ok ? response.text() : Promise.reject("Arquivo não encontrado."))
+    .then(md => {
+        const authorInfo = extractAuthorInfo(md);
+        const postHTML = markdownToHTML(md.replace(/Info {[^}]+}/, ''));
+        document.getElementById('post-content').innerHTML = `
+            <article>
+                <h1>${formatTitle(fileName)}</h1>
+                <div class="author-info">
+                    <img src="${authorInfo.photo}" alt="${authorInfo.name}">
+                    <span>Por <a href="${authorInfo.profileUrl}">${authorInfo.name}</a></span>
+                </div>
+                <p class="post-meta">Publicado em ${getFileDate()}</p>
+                <div>${postHTML}</div>
+            </article>
         `;
-        
-        postContent.prepend(summaryContainer);
+        addCopyButtonEventListeners();
+        document.body.classList.add('loaded');
+    })
+    .catch(() => window.location.href = "404.html");
 
-        window.scrollTo({
-            top: summaryContainer.offsetTop - 90,
-            behavior: 'smooth'
-        });
-
-        setTimeout(() => summaryContainer.classList.add('show'), 100);
-    }
-});
-
-function extractAuthorInfo(md) {
-    const authorMatch = md.match(/Info {\s*AuthorName: ([^\n]+)\s*AuthorUrlProfile: ([^\n]+)\s*AuthorPhoto: ([^\n]+)\s*}/);
-    if (authorMatch) {
-        return {
-            name: authorMatch[1].trim(),
-            profileUrl: authorMatch[2].trim(),
-            photo: authorMatch[3].trim()
-        };
-    }
-    return {
-        name: 'Desconhecido',
-        profileUrl: '#',
-        photo: 'https://via.placeholder.com/27'
-    };
 }
 
-function getFileDate(filePath) {
-    const fileStats = new Date();
-    return fileStats.toLocaleDateString();
-}
+function formatTitle(fileName) { return fileName.replace(/-/g, ' ').replace(/\b\w/g, char => char.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase()); }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const toolbar = document.querySelector('.toolbar');
-    
-    function updateToolbar() {
-        if (window.scrollY > 10) {
-            toolbar.classList.add('scrolled');  
-        } else {
-            toolbar.classList.remove('scrolled');  
-        }
-    }
+function addCopyButtonEventListeners() { document.querySelectorAll('.copy-button').forEach(button => { button.addEventListener('click', () => { navigator.clipboard.writeText(button.nextElementSibling.innerText) .then(() => { button.innerText = 'Copied!'; setTimeout(() => button.innerText = 'Copiar', 1500); }) .catch(() => alert('Erro ao copiar')); }); }); }
 
-    window.addEventListener('scroll', updateToolbar);
+function summarizeText(content) { const sentences = content.split(". "); return sentences.slice(0, 2).join(". ") + (sentences.length > 2 ? "." : ""); }
+
+document.getElementById("summarizeButton")?.addEventListener("click", () => { const postContent = document.getElementById("post-content"); if (postContent.querySelector(".summary-container")) { return postContent.querySelector(".summary-container").classList.remove('show'); }
+
+const summary = summarizeText(postContent.querySelector("article").innerText);
+const summaryContainer = document.createElement("div");
+summaryContainer.classList.add("summary-container");
+summaryContainer.innerHTML = `
+    <h4><img src="/img/menu_book.png" alt="Resumo"> Summer</h4>
+    <h5>Resumo do texto</h5>
+    <p>${summary}</p>
+    <p class="auto-note">*Resumo gerado automaticamente.</p>
+`;
+postContent.prepend(summaryContainer);
+window.scrollTo({ top: summaryContainer.offsetTop - 90, behavior: 'smooth' });
+setTimeout(() => summaryContainer.classList.add('show'), 100);
+
 });
 
-loadPost();
-</script>
-<script async type="application/javascript"
-        src="https://news.google.com/swg/js/v1/swg-basic.js"></script>
-<script>
-  (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
-    basicSubscriptions.init({
-      type: "NewsArticle",
-      isPartOfType: ["Product"],
-      isPartOfProductId: "CAowxpraCw:openaccess",
-      clientOptions: { theme: "light", lang: "pt-BR" },
-    });
-  });
+function extractAuthorInfo(md) { const match = md.match(/Info {\sAuthorName: ([^\n]+)\sAuthorUrlProfile: ([^\n]+)\sAuthorPhoto: ([^\n]+)\s}/); return match ? { name: match[1].trim(), profileUrl: match[2].trim(), photo: match[3].trim() } : { name: 'Desconhecido', profileUrl: '#', photo: 'https://via.placeholder.com/27' }; }
+
+function getFileDate() { return new Date().toLocaleDateString(); }
+
+document.addEventListener('DOMContentLoaded', () => { const toolbar = document.querySelector('.toolbar'); window.addEventListener('scroll', () => toolbar.classList.toggle('scrolled', window.scrollY > 10)); loadPost(); });
 </script>
 </body>
 </html>
