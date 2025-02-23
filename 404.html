@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="utf-8">
     <link rel="icon" href="/assets/icon/web/favicon.ico" sizes="any">
@@ -7,11 +7,11 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>x_x</title>
+    <title>404</title>
     <style>
         @font-face {
             font-family: 'GoogleSansFlex';
-            src: url('./font/GoogleSansFlex-Regular.ttf') format('truetype');
+            src: url('./font/GoogleSansFlex-Black.ttf') format('truetype');
         }
         * {
             margin: 0;
@@ -24,104 +24,67 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
-            background-color: #FAF8FF;
-            color: #001e2e;
+            background-color: #ffffff;
+            color: #000000;
             text-align: center;
-            padding: 2em;
-            opacity: 0;
-            padding-bottom: 3em;
-            user-select: none; /* Impede a seleção de texto */
+            user-select: none;
+            flex-direction: column;
+            position: relative;
+            padding: 20px;
         }
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: #000000;
-                color: #E2E2E2;
+                color: #ffffff;
             }
         }
         .container {
-            max-width: 600px;
-            transform: translateY(20px);
-            opacity: 0;
+            position: relative;
+            text-align: center;
         }
-        img {
-            max-width: 70%;
-            border-radius: 12px;
-            margin-bottom: 1em;
-            pointer-events: none; /* Impede ações como clicar ou arrastar */
-        }
-        h1 {
-            font-size: 2em;
-            margin: 0;
+        .error-text {
+            font-size: 7em;
             font-weight: 900;
+            color: #E32219;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            white-space: nowrap;
         }
-        p {
-            font-size: 1em;
-            margin-top: 0.5em;
-            margin-bottom: 2em;
-            font-weight: 400;
+        .error-gif {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            z-index: 1;
+            max-width: 250px;
         }
-        .error-code {
-            font-size: 4em;
-            color: #ff9800;
-            margin: 0;
-            font-weight: bold;
+        .error-message {
+            font-size: 0.9em;
+            width: 100%;
+            max-width: 300px;
+            margin-top: 90px;
+            line-height: 1.5;
         }
-        .home-button {
-            margin-top: 1em;
-            padding: 0.8em 1.2em;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 0.5px solid rgba(169, 169, 169, 0.4);
-            box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.1);
-            color: #FFF;
-            text-decoration: none;
-            border-radius: 999px;
-            font-size: 1em;
-            font-weight: 400;
-            transition: background-color 0.3s;
-        }
-        .home-button:hover {
-            background-color: #466759;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .img {
+            width: 80px;  
+            height: auto;
+            position: absolute;
+            bottom: 130%;  
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;  
         }
     </style>
-    <script>
-        function loadRandomImage() {
-            const randomNumber = Math.floor(Math.random() * 10) + 1;
-            return `https://motog34.github.io/assets/icon/404/${randomNumber}.png?raw=true`;
-        }
-
-        function startAnimation() {
-            const body = document.body;
-            const container = document.querySelector('.container');
-
-            document.getElementById('random-image').src = loadRandomImage();
-
-            setTimeout(() => {
-                body.style.opacity = '1';
-                container.style.animation = 'fadeInUp 1.5s ease-out forwards';
-            }, 1100);
-        }
-
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
-    </script>
 </head>
-<body onload="startAnimation()">
+<body>
     <div class="container">
-        <img src="" alt="404" id="random-image">
-        <h1>Oops!</h1>
-        <p>It looks like the page you are trying to access does not exist or has been moved.</p>
-    </div>
+        <div class="error-text">404</div>
+        <img class="error-gif" src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/404.gif" alt="404 GIF">
+        <p class="error-message">Oops... Parece que algo não está certo ou essa página não existe. Mas não se preocupe! Se você acha que isso é um erro, por favor, denuncie esse problema no nosso servidor!</p>
+        <img class="img" src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/bc_dark.png">
+   </div>
 </body>
 </html>
