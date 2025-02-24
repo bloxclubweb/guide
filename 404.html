@@ -1,4 +1,6 @@
-<!DOCTYPE html>  <html lang="pt-BR">  <head>  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>  
     <meta charset="utf-8">  
     <link rel="icon" href="/assets/icon/web/favicon.ico" sizes="any">  
     <link rel="apple-touch-icon" href="/assets/icon/web/apple-touch-icon.png">  
@@ -42,7 +44,7 @@
             opacity: 0;  
             transform: translateY(50px);  
             animation: fadeInUp 1s ease-out forwards;  
-            animation-delay: 0.5s; /* Atraso de 1 segundo */  
+            animation-delay: 0.5s;  
         }  
         @keyframes fadeInUp {  
             from {  
@@ -72,6 +74,7 @@
             transform: translate(-50%, -55%);  
             z-index: 1;  
             max-width: 250px;  
+            display: none; /* Oculta por padrão */  
         }  
         .error-message {  
             font-size: 0.9em;  
@@ -105,9 +108,15 @@
 <body>  
     <div class="container">  
         <div class="error-text">404</div>  
-        <img class="error-gif" src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/404.gif" alt="404 GIF">  
+        <img class="error-gif" id="gif404" src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/404.gif" alt="404 GIF">  
         <p class="error-message">Oops...<br>Parece que algo não está certo ou essa página não existe. Mas não se preocupe! Se você acha que isso é um erro, por favor, denuncie esse problema no nosso servidor!</p>  
         <img class="img" src="https://raw.githubusercontent.com/bloxclubweb/guide/refs/heads/main/img/bc_dark_v2.png">  
     </div>  
+
+    <script>  
+        if (Math.random() < 0.5) {  
+            document.getElementById("gif404").style.display = "block";  
+        }  
+    </script>  
 </body>  
 </html>
